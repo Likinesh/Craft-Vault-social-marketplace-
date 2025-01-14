@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Craft-Vault",
+    "name": "Craft Vault",
     "slug": "Craft-Vault",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -24,6 +24,14 @@
     "web": {
       "bundler": "metro",
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "The app accesses your photos to let you share them with your friends."
+        }
+      ]
+    ]
   }
 }

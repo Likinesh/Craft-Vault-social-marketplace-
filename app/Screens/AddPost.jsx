@@ -8,10 +8,8 @@ import { getFirestore,getDocs ,collection, addDoc, } from "firebase/firestore";
 import {getDownloadURL, getStorage, ref, uploadBytes} from "firebase/storage"
 import { useUser } from '@clerk/clerk-expo';
 export default function AddPostScreen() {
-  const {width} = Dimensions.get('window');
   const [image, setImage] = useState(null);
   const db = getFirestore(app);
-  const storage = getStorage();
   const [loading,setLoading]=useState(false);
   const {user}=useUser();
   const [categoryList,setCategoryList]=useState([]);
@@ -43,9 +41,33 @@ export default function AddPostScreen() {
       setImage(result.assets[0].uri);
     }
   };
-
+  
+  const storage = getStorage();
   const onSubmitMethod=async(value)=>{
-    console.log(value);
+    setLoading(true);
+    // Find alternatove to store image in cloud
+    // Currently by firebase
+    const resp = await fetch(image);
+    const blob = await resp.blob();
+    const storageref=ref(storage,'folder_name/'+Date.now()+'.jpg');
+    uploadBytes(storageref,blob).then((snapshot)=>{
+      console.log('uploaded blob or file to cloud')
+    }).then((res)=>{
+      getDownloadURL(storageref).then(async(downloadUrl)=>{
+        console.log(downloadUrl);
+        value.image=downloadUrl;
+        value.userName=user.fullName
+        value.userEmail=user.primaryEmailAddress.emailAddress
+        value.userImage=user.imageUrl
+
+        const docRef=await addDoc(collection(db,"UserPost"),value);
+        if(docRef.id){
+          setLoading(false);
+          Alert.alert("Successfully Posted Your Item")
+        }
+      })
+    })
+    
   }
   return (
     <KeyboardAvoidingView>
@@ -57,8 +79,7 @@ export default function AddPostScreen() {
           onSubmit={value=>onSubmitMethod(value)}
           validate={(values)=>{
             const errors={}
-            if(!values.title)
-            {
+            if(!values.title){
               console.log("Title not Present");
               ToastAndroid.show('Title Must be There',ToastAndroid.SHORT)
               errors.name="Title Must be there"
@@ -68,12 +89,10 @@ export default function AddPostScreen() {
         >
           {({handleChange,handleBlur,handleSubmit,values,setFieldValue,errors})=>(
             <View>
-
               <TouchableOpacity onPress={pickImage}>
             {image?
             <Image source={{uri:image}} style={{width:100,height:100,borderRadius:15}} />
-            :
-            <Image source={require('./../../assets/images/placeholder.jpg')}
+            : <Image source={require('./../../assets/images/placeholder.jpg')}
             style={{width:100,height:100,borderRadius:15}}
             />}
              
