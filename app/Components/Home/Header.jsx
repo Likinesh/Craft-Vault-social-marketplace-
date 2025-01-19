@@ -14,7 +14,7 @@ const Header = () => {
                 <Text className='text-[20px] font-bold'>{user?.fullName}</Text>
             </View>
         </View>
-        <View className='p-3 mt-5 px-5 bg-white rounded-full items-center gap-2 flex flex-row border-blue-200 border-[2px]'>
+        <View className='p-[10px] mt-5 px-5 bg-blue-50 rounded-full items-center gap-2 flex flex-row border-blue-300 border-[2px]'>
         <Ionicons name='search' size={30} color="gray" />
         <TextInput placeholder='Search' className='ml-2 text-[16px]'
         onChange={(value)=>console.log(value.target.value)} />
