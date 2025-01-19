@@ -1,10 +1,12 @@
 import { View, Text } from 'react-native'
 import React from 'react'
+import { useNavigation } from '@react-navigation/native'
 // Created as it required to show in user items page 
 const Post = ({item}) => {
+    const navigation = useNavigation();
+
   return (
-    
-    <TouchableOpacity className='flex-1 m-2'>
+    <TouchableOpacity onPress={()=> navigation.push('item',{item:item})} className='flex-1 m-2'>
         <Image source={{uri:item.image}} 
             className='w-full h-[140px] rounded-lg border-[1px] border-slate-200 '
         />
