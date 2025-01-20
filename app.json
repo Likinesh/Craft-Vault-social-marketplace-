@@ -1,17 +1,21 @@
 {
   "expo": {
-    "name": "Craft Vault",
-    "slug": "Craft-Vault",
+    "name": "community-marketplace",
+    "slug": "craft-vault",
+    "scheme": "community-marketplace",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/splash-icon.png",
+      "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true
     },
@@ -19,7 +23,11 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ],
+      "package": "com.tubeguruji.communitymarketplace"
     },
     "web": {
       "bundler": "metro",
@@ -32,6 +40,12 @@
           "photosPermission": "The app accesses your photos to let you share them with your friends."
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "6837148b-641c-4b38-a66d-22b9500f7aec"
+      }
+    },
+    "owner": "likith_11"
   }
 }

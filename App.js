@@ -1,33 +1,35 @@
-import React from 'react';
-import { tokenCache } from './cache'
 import { StatusBar } from 'expo-status-bar';
-import { View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
+import LoginScreen from './Apps/Screens/LoginScreen';
 import { ClerkProvider, SignedIn, SignedOut } from '@clerk/clerk-expo';
-import { NavigationContainer, NavigationIndependentTree } from '@react-navigation/native';
-import Tabs from './app/Navigations/Tabs';
-import LoginScreen from './app/Screens/LoginScreen';
-import './global.css';
+import { NavigationContainer } from '@react-navigation/native';
+import TabNavigation from './Apps/Navigations/TabNavigation';
+import "./global.css"
 
 export default function App() {
-  const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY
-
-  if (!publishableKey) {
-    throw new Error('Add EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY in your .env')
-  }
-
   return (
-      <View style={{ flex: 1, backgroundColor: 'white' }}>
-       <StatusBar style="auto" />
-       <ClerkProvider tokenCache={tokenCache} publishableKey={publishableKey}>
-        <SignedIn>
-            <NavigationContainer>
-              <Tabs />
-            </NavigationContainer>
+    <ClerkProvider publishableKey='pk_test_Y29tcG9zZWQtdGFkcG9sZS04Mi5jbGVyay5hY2NvdW50cy5kZXYk'>
+    <View className="flex-1  bg-white">
+      <StatusBar style="auto" />
+     
+       <SignedIn>
+          <NavigationContainer>
+            <TabNavigation/>
+          </NavigationContainer>
         </SignedIn>
         <SignedOut>
-          <LoginScreen />
+        <LoginScreen/>
         </SignedOut>
-      </ClerkProvider>
-      </View>
+    </View>
+    </ClerkProvider>
   );
 }
+
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     backgroundColor: '#fff',
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//   },
+// });

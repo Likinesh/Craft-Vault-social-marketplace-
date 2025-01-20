@@ -1,4 +1,4 @@
-import { View, Text, TextInput, StyleSheet, Button, TouchableOpacity, Image, ToastAndroid, Alert, ActivityIndicator, KeyboardAvoidingView, ScrollView, Dimensions } from 'react-native'
+import { View, Text, TextInput, StyleSheet, Button, TouchableOpacity, Image, ToastAndroid, Alert, ActivityIndicator, KeyboardAvoidingView, ScrollView } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { app } from '../../firebaseConfig';
 import { Formik } from 'formik';
@@ -10,13 +10,17 @@ import { useUser } from '@clerk/clerk-expo';
 export default function AddPostScreen() {
   const [image, setImage] = useState(null);
   const db = getFirestore(app);
+  const storage = getStorage();
   const [loading,setLoading]=useState(false);
   const {user}=useUser();
   const [categoryList,setCategoryList]=useState([]);
   useEffect(()=>{
     getCategoryList();
   },[])
-  
+
+  /**
+   * Used to get Category List
+   */
   const getCategoryList=async()=>{ 
     setCategoryList([]);
     const querySnapshot=await getDocs(collection(db,'Category'));
@@ -26,6 +30,9 @@ export default function AddPostScreen() {
     })
   }
 
+  /**
+   * Used to Pick Image from Gallary
+   */
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -41,37 +48,39 @@ export default function AddPostScreen() {
       setImage(result.assets[0].uri);
     }
   };
-  
-  const storage = getStorage();
+
+
   const onSubmitMethod=async(value)=>{
-    setLoading(true);
-    // Find alternatove to store image in cloud
-    // Currently by firebase
-    const resp = await fetch(image);
-    const blob = await resp.blob();
-    const storageref=ref(storage,'folder_name/'+Date.now()+'.jpg');
-    uploadBytes(storageref,blob).then((snapshot)=>{
-      console.log('uploaded blob or file to cloud')
-    }).then((res)=>{
-      getDownloadURL(storageref).then(async(downloadUrl)=>{
+    
+    setLoading(true)
+    //Covert Uri to Blob File
+    const resp=await fetch(image);
+    const blob=await resp.blob();
+    const storageRef = ref(storage, 'communityPost/'+Date.now()+".jpg");
+
+    uploadBytes(storageRef, blob).then((snapshot) => {
+      console.log('Uploaded a blob or file!');
+    }).then((resp)=>{
+      getDownloadURL(storageRef).then(async(downloadUrl)=>{
         console.log(downloadUrl);
         value.image=downloadUrl;
-        value.userName=user.fullName
-        value.userEmail=user.primaryEmailAddress.emailAddress
-        value.userImage=user.imageUrl
-
-        const docRef=await addDoc(collection(db,"UserPost"),value);
-        if(docRef.id){
+        value.userName=user.fullName;
+        value.userEmail=user.primaryEmailAddress.emailAddress;
+        value.userImage=user.imageUrl;
+        const docRef=await addDoc(collection(db,"UserPost"),value)
+        if(docRef.id)
+        {
           setLoading(false);
-          Alert.alert("Successfully Posted Your Item")
+          Alert.alert('Success!!!','Post Added Successfully.')
         }
       })
-    })
-    
+    });
+
+
   }
   return (
     <KeyboardAvoidingView>
-    <ScrollView className="p-5 pt-5 mt-10 bg-white h-full border-r-xl"> 
+    <ScrollView className="p-10 bg-white "> 
     <Text className="text-[27px] font-bold">Add New Post</Text>
     <Text className="text-[16px] text-gray-500 mb-7">Create New Post and Start Selling</Text>
         <Formik
@@ -79,7 +88,8 @@ export default function AddPostScreen() {
           onSubmit={value=>onSubmitMethod(value)}
           validate={(values)=>{
             const errors={}
-            if(!values.title){
+            if(!values.title)
+            {
               console.log("Title not Present");
               ToastAndroid.show('Title Must be There',ToastAndroid.SHORT)
               errors.name="Title Must be there"
@@ -89,10 +99,12 @@ export default function AddPostScreen() {
         >
           {({handleChange,handleBlur,handleSubmit,values,setFieldValue,errors})=>(
             <View>
+
               <TouchableOpacity onPress={pickImage}>
             {image?
             <Image source={{uri:image}} style={{width:100,height:100,borderRadius:15}} />
-            : <Image source={require('./../../assets/images/placeholder.jpg')}
+            :
+            <Image source={require('./../../assets/images/placeholder.jpg')}
             style={{width:100,height:100,borderRadius:15}}
             />}
              
@@ -106,8 +118,8 @@ export default function AddPostScreen() {
                  <TextInput
                   style={styles.input}
                   placeholder='Description'
-                  multiline={true}
                   value={values?.desc}
+      
                   numberOfLines={5}
                   onChangeText={handleChange('desc')}
                 />
@@ -121,7 +133,7 @@ export default function AddPostScreen() {
                  <TextInput
                   style={styles.input}
                   placeholder='Address'
-                  value={values?.address}
+                  value={values?.addresss}
                   onChangeText={handleChange('address')}
                 />
 
@@ -130,7 +142,7 @@ export default function AddPostScreen() {
             <Picker
               selectedValue={values?.category}
               className="border-2"
-              onValueChange={val=>setFieldValue('category',val)}
+              onValueChange={itemValue=>setFieldValue('category',itemValue)}
             > 
               {categoryList.length>0&&categoryList?.map((item,index)=>(
                   <Picker.Item key={index} 
@@ -169,8 +181,8 @@ const styles = StyleSheet.create({
         borderRadius:10,
         padding:10,
         paddingTop:15,
-        marginTop:10,
-        marginBottom:5,
+       
+        marginTop:10,marginBottom:5,
         paddingHorizontal:17,
         textAlignVertical:'top',
         fontSize:17
