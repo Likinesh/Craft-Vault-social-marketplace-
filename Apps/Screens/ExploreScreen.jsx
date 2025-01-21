@@ -11,9 +11,6 @@ export default function ExploreScreen() {
   useEffect(()=>{
     getAllProducts();
   },[])
-  /**
-   * Used to get All Products
-   */
   const getAllProducts=async()=>{
     setproductList([]);
     const q=query(collection(db,'UserPost'),orderBy('createdAt','desc'));

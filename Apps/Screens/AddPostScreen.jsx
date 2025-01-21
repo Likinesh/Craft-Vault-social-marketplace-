@@ -18,9 +18,6 @@ export default function AddPostScreen() {
     getCategoryList();
   },[])
 
-  /**
-   * Used to get Category List
-   */
   const getCategoryList=async()=>{ 
     setCategoryList([]);
     const querySnapshot=await getDocs(collection(db,'Category'));
@@ -30,9 +27,6 @@ export default function AddPostScreen() {
     })
   }
 
-  /**
-   * Used to Pick Image from Gallary
-   */
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -53,7 +47,6 @@ export default function AddPostScreen() {
   const onSubmitMethod=async(value)=>{
     
     setLoading(true)
-    //Covert Uri to Blob File
     const resp=await fetch(image);
     const blob=await resp.blob();
     const storageRef = ref(storage, 'communityPost/'+Date.now()+".jpg");

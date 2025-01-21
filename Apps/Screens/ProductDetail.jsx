@@ -31,9 +31,6 @@ export default function ProductDetail({navigation}) {
       
     }
 
-    /**
-     * Used to Share Product
-     */
     const shareProduct=async()=>{
         const content={
             message:product?.title+"\n"+product?.desc,
@@ -93,7 +90,6 @@ export default function ProductDetail({navigation}) {
             <Text className="text-[17px] text-gray-500">{product?.desc}</Text>
         </View>
 
-    {/* User Info  */}
         <View className="p-3 flex flex-row items-center gap-3 bg-blue-100  border-gray-400">
             <Image source={{uri:product.userImage}}
                 className="w-12 h-12 rounded-full"

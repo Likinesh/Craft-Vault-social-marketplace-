@@ -7,8 +7,7 @@ import { useOAuth } from '@clerk/clerk-expo';
 WebBrowser.maybeCompleteAuthSession();
 export default function LoginScreen() {
 
-    useWarmUpBrowser();
- 
+  useWarmUpBrowser();
   const { startOAuthFlow } = useOAuth({ strategy: "oauth_google" });
 
   const onPress = React.useCallback(async () => {

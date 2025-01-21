@@ -20,9 +20,6 @@ export default function HomeScreen() {
     getLatestItemList();
   },[])
 
-  /**
-   * Used to Get Sliders for Home Screen
-   */
   const getSliders=async()=>{
     setSliderList([])
     const querySnapshot = await getDocs(collection(db, "Sliders"));
@@ -32,9 +29,6 @@ export default function HomeScreen() {
   });
   }  
 
-  /**
-   * Used to get Category List
-   */
   const getCategoryList=async()=>{ 
     setCategoryList([]);
     const querySnapshot=await getDocs(collection(db,'Category'));
@@ -44,10 +38,7 @@ export default function HomeScreen() {
     })
   }
 
-  /**
-   * 
-   */
-    const getLatestItemList=async()=>{
+  const getLatestItemList=async()=>{
       setLatestItemList([]);
       const querySnapShot=await getDocs(collection(db,'UserPost'),orderBy('createdAt','desc'));
       querySnapShot.forEach((doc)=>{
@@ -60,11 +51,8 @@ export default function HomeScreen() {
   return (
     <ScrollView className="py-8 px-6 bg-white flex-1">
       <Header/>
-      {/* Slider  */}
       <Slider sliderList={sliderList} />
-      {/* Category List  */}
       <Categories categoryList={categoryList} />
-      {/* Latest Item List   */}
       <LatestItemList latestItemList={latestItemList}
       heading={'Latest Items'}
       />

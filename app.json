@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "community-marketplace",
+    "name": "Craft Vault",
     "slug": "craft-vault",
     "scheme": "community-marketplace",
     "version": "1.0.0",
@@ -10,7 +10,7 @@
     "newArchEnabled": true,
     "splash": {
       "image": "./assets/splash.png",
-      "resizeMode": "contain",
+      "resizeMode": "cover",
       "backgroundColor": "#ffffff"
     },
     "assetBundlePatterns": [

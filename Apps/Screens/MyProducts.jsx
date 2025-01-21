@@ -22,9 +22,6 @@ export default function MyProducts() {
       getUserPost();
     })
   },[navigation])
-  /**
-   * Used to get User Post only
-   */
   const getUserPost=async()=>{
     setProductList([]);
     const q=query(collection(db,'UserPost'),where('userEmail','==',user?.primaryEmailAddress?.emailAddress));
